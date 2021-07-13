@@ -3,6 +3,7 @@
 //
 #include "TestingClass.h"
 #include <opencv2/opencv.hpp>
+#include <thread>
 
 void TestingClass::cameraTesting() {
     cv::Mat image = cv::Mat();
@@ -20,8 +21,13 @@ void TestingClass::cameraTesting() {
 }
 
 void TestingClass::imageDilation() {
-    cv::Mat tmp = cv::imread("resources/aPhoto.jpg", 0);
-    cv::imshow("photo", tmp);
-
+    cv::Mat readImage = cv::imread("resources/aPhoto.jpg", 0);
+    cv::imshow("photo", readImage);
+    cv::Mat dilatedImage;
+    //cv::dilate(readImage, dilatedImage);
    // delete image;
+}
+void TestingClass::longFunction() {
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    std::cout<<"Running long function...";
 }

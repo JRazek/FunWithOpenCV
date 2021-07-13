@@ -10,6 +10,7 @@ class TestingClass {
 public:
     static void cameraTesting();
     static void imageDilation();
+    static void longFunction();
 };
 
 
