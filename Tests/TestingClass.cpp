@@ -3,6 +3,7 @@
 //
 #include "TestingClass.h"
 #include <opencv2/opencv.hpp>
+#include <opencv2/core/mat.hpp>
 #include <thread>
 
 void TestingClass::cameraTesting() {
@@ -28,6 +29,27 @@ void TestingClass::imageDilation() {
    // delete image;
 }
 void TestingClass::longFunction() {
-    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     std::cout<<"Running long function...";
+    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+}
+
+void TestingClass::convolutionWithMyKernel(cv::Mat &img){
+    cv::Mat buffer;
+    const short kernelDepth = 1;
+    const short kernelSize = 3;
+    
+
+    static signed short kernelStructure [kernelDepth][kernelSize][kernelSize] = 
+    {
+        {
+             {0, 0, 0},
+             {0, -1, 0},
+             {0, 0, 0},
+
+            // {-1, -1, -1},
+            // {-1,  8, -1},
+            // {-1, -1, -1},
+        },
+    };
+
 }
