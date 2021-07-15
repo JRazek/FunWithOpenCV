@@ -7,10 +7,7 @@ int main() {
     
     cv::Mat img = cv::imread("resources/aPhoto.jpg");
 
-    std::cerr << img.channels() << "\n";
-    TestingClass::convolutionWithMyKernel(img);
-
-   // TestingClass::cameraTesting();
-
+    char * addr = "127.0.0.1";
+    TestingClass::socketTesting(img, 2000, addr);
     return 0;
 }

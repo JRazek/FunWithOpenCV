@@ -3,6 +3,11 @@
 //
 #include "TestingClass.h"
 #include <opencv2/opencv.hpp>
+#include <sys/socket.h>
+#include <stdio.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <string.h>
 #include <opencv2/core/mat.hpp>
 #include <thread>
 
@@ -52,4 +57,38 @@ void TestingClass::convolutionWithMyKernel(cv::Mat &img){
         },
     };
 
+}
+int TestingClass::socketTesting(const cv::Mat &img, const int port, const char *addr){
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    //std::string message = "hello, idk pls work or sth";
+    char buffer[1024] = {0};
+    //const short port = 2000;
+
+    sockaddr_in serv_addr;
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(port);
+    if(inet_pton(AF_INET, addr, &serv_addr.sin_addr)<=0) {
+        printf("\nInvalid address/ Address not supported \n");
+        return -1;
+    }
+
+    // for(int i = 0; i < message.size(); i ++){
+    //     body[i] = message[i];
+    // }
+    
+    int size = img.total() * img.elemSize();
+
+    char *body = new char[size];
+
+    std::memcpy(body, img.data, size * sizeof(char));
+
+    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0){
+        printf("\nConnection Failed \n");
+        return -1;
+    }
+    
+    send(sock , body , strlen(body) , 0);
+
+    delete body;
+    return 0;
 }
