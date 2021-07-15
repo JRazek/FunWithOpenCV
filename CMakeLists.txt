@@ -7,8 +7,10 @@ find_package(OpenCV REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+#set(CMAKE_CXX_COMPILER "/usr/bin/arm-linux-gnueabihf-g++-9")
 
-add_executable(OpenCV main.cpp Tests/TestingClass.cpp Tests/TestingClass.h)
+set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+
+add_executable(OpenCV main.cpp Tests/TestingClass.cpp)
 
 target_link_libraries( OpenCV ${OpenCV_LIBS} )
