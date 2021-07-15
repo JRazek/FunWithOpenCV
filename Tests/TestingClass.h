@@ -13,7 +13,8 @@ public:
     static void imageDilation();
     static void longFunction();
     static void convolutionWithMyKernel(cv::Mat &);
-    static int socketTesting(const cv::Mat &mat, const int port, const char *addr);
+    static int socketTestingClient(const cv::Mat &mat, const int port, const char *addr);
+    static int socketTestingServer(const cv::Mat &mat, const int port, const char *addr);
 };
 
 

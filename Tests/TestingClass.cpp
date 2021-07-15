@@ -58,7 +58,7 @@ void TestingClass::convolutionWithMyKernel(cv::Mat &img){
     };
 
 }
-int TestingClass::socketTesting(const cv::Mat &img, const int port, const char *addr){
+int TestingClass::socketTestingClient(const cv::Mat &img, const int port, const char *addr){
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     //std::string message = "hello, idk pls work or sth";
     char buffer[1024] = {0};
@@ -90,5 +90,9 @@ int TestingClass::socketTesting(const cv::Mat &img, const int port, const char *
     send(sock , body , strlen(body) , 0);
 
     delete body;
+    return 0;
+}
+
+int TestingClass::socketTestingServer(const cv::Mat &mat, const int port, const char *addr){
     return 0;
 }
