@@ -8,13 +8,15 @@
 #include <opencv2/opencv.hpp>
 
 class TestingClass {
+    bool socketReady = false;
 public:
     static void cameraTesting();
     static void imageDilation();
     static void longFunction();
     static void convolutionWithMyKernel(cv::Mat &);
-    static int socketTestingClient(const cv::Mat &mat, const int port, const char *addr);
-    static int socketTestingServer(const cv::Mat &mat, const int port, const char *addr);
+    static cv::Mat getImage(uchar* image, int length, int flag);
+    int socketTestingClient(const cv::Mat &mat, int port, const char *addr);
+    int socketTestingServer(const cv::Mat &mat, int port);
 };
 
 

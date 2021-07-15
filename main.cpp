@@ -7,7 +7,15 @@ int main() {
     
     cv::Mat img = cv::imread("resources/aPhoto.jpg");
 
-    char * addr = "127.0.0.1";
-    TestingClass::socketTestingClient(img, 2000, addr);
+    TestingClass testingClass;
+
+    const char * addr = "127.0.0.1";
+
+    std::thread t1(&TestingClass::socketTestingServer, &testingClass, img, 12321);
+
+    while (testingClass.socketTestingClient(img, 12321, addr) != 0);
+
+    t1.join();
+
     return 0;
 }
