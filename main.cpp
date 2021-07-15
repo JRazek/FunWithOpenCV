@@ -4,16 +4,10 @@
 #include "Tests/TestingClass.h"
 
 int main() {
-    //TestingClass::imageDilation();
+    
+    cv::Mat img = cv::imread("resources/aPhoto.jpg");
 
-    std::thread t1(&TestingClass::longFunction);
-    for(int i = 0; i < 1e6; i ++){
-        if(!(i % 1000)){
-            std::cout<<":) \n";
-        }
-    }
-
-    t1.join();
-   // std::cerr<<"test";
+    char * addr = "127.0.0.1";
+    TestingClass::socketTestingClient(img, 2000, addr);
     return 0;
 }
