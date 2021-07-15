@@ -63,7 +63,6 @@ int TestingClass::socketTestingClient(const cv::Mat &img, const int port, const 
         return -1;
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     //std::string message = "hello, idk pls work or sth";
-    char buffer[1024] = {0};
     //const short port = 2000;
 
     sockaddr_in serv_addr{};
@@ -80,7 +79,7 @@ int TestingClass::socketTestingClient(const cv::Mat &img, const int port, const 
     
     int size = img.total() * img.elemSize();
 
-    char *body = new char[size];
+    unsigned char *body = new unsigned char[size];
 
     std::memcpy(body, img.data, size * sizeof(char));
 
@@ -89,8 +88,17 @@ int TestingClass::socketTestingClient(const cv::Mat &img, const int port, const 
         return -1;
     }
     
-    send(sock , body , strlen(body) , 0);
+    send(sock , body , size , 0);
     close(sock);
+
+
+    cv::Mat imageWithData = TestingClass::getImage(body, size, 0);
+
+   // cv::imshow("IMAGE 212:)", img);
+    cv::imshow("IMAGE :)", imageWithData);
+    cv::waitKey(5000);
+
+
     delete[] body;
     return 0;
 }
@@ -142,10 +150,10 @@ int TestingClass::socketTestingServer(const cv::Mat &mat, const int port){
         if(portion < 1)
             break;
     }
-    cv::Mat imageWithData = this->getImage(buffer, dataSize, 0);
+//    cv::Mat imageWithData = this->getImage(buffer, dataSize + 1, 0);
 
-    cv::imshow("IMAGE :)", imageWithData);
-    cv::waitKey(5000);
+   // cv::imshow("IMAGE :)", imageWithData);
+   // cv::waitKey(5000);
 
   //  send(new_socket , hello , strlen(hello) , 0 );
 
@@ -155,7 +163,10 @@ int TestingClass::socketTestingServer(const cv::Mat &mat, const int port){
 
 cv::Mat TestingClass::getImage(unsigned char* image, int length, int flag)
 {
-    std::vector<unsigned char> data = std::vector<unsigned char>(image, image + length);
+    std::vector<unsigned char> data ;
+    for(int i = 0; i < length; i++){
+        data.push_back(image[i]);
+    }
     cv::Mat ImMat = cv::imdecode(data, flag);
 
     return ImMat;
