@@ -6,6 +6,7 @@
 #define OPENCV_TESTINGCLASS_H
 
 #include <opencv2/opencv.hpp>
+typedef unsigned char byte;
 
 class TestingClass {
     bool socketReady = false;
@@ -14,7 +15,8 @@ public:
     static void imageDilation();
     static void longFunction();
     static void convolutionWithMyKernel(cv::Mat &);
-    static cv::Mat getImage(uchar* image, int length, int flag);
+    static cv::Mat bytesToImage(byte *image);
+    static byte * imageToBytes(const cv::Mat &img);
     int socketTestingClient(const cv::Mat &mat, int port, const char *addr);
     int socketTestingServer(const cv::Mat &mat, int port);
 };

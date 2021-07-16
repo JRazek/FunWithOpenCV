@@ -11,6 +11,7 @@
 #include <opencv2/core/mat.hpp>
 #include <thread>
 
+
 void TestingClass::cameraTesting() {
     cv::Mat image = cv::Mat();
     cv::VideoCapture videoCapture = cv::VideoCapture(0);
@@ -59,6 +60,7 @@ void TestingClass::convolutionWithMyKernel(cv::Mat &img){
 
 }
 int TestingClass::socketTestingClient(const cv::Mat &img, const int port, const char *addr){
+    this->socketReady = true;
     if(!this->socketReady)
         return -1;
     int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -73,33 +75,25 @@ int TestingClass::socketTestingClient(const cv::Mat &img, const int port, const 
         return -1;
     }
 
-    // for(int i = 0; i < message.size(); i ++){
-    //     body[i] = message[i];
-    // }
-    
-    int size = img.total() * img.elemSize();
+    byte *bytes = TestingClass::imageToBytes(img);
+    cv::Mat imageWithData = TestingClass::bytesToImage(bytes);
 
-    unsigned char *body = new unsigned char[size];
 
-    std::memcpy(body, img.data, size * sizeof(char));
+    cv::imshow("IMAGE :)", imageWithData);
+    cv::waitKey(5000);
+
+
 
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0){
         printf("\nConnection Failed \n");
         return -1;
     }
     
-    send(sock , body , size , 0);
+//    send(sock, bytes, bytes.second, 0);
     close(sock);
 
 
-    cv::Mat imageWithData = TestingClass::getImage(body, size, 0);
-
-   // cv::imshow("IMAGE 212:)", img);
-    cv::imshow("IMAGE :)", imageWithData);
-    cv::waitKey(5000);
-
-
-    delete[] body;
+    delete[] bytes;
     return 0;
 }
 
@@ -110,9 +104,7 @@ int TestingClass::socketTestingServer(const cv::Mat &mat, const int port){
     int opt = 1;
     int addrlen = sizeof(address);
     const short BUFFER_SIZE = 8192;
-    unsigned char buffer[BUFFER_SIZE] = {0};
-    const char *hello = "Hello from server";
-
+    byte buffer[BUFFER_SIZE] = {0};
     // Creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0){
         perror("socket failed");
@@ -144,30 +136,40 @@ int TestingClass::socketTestingServer(const cv::Mat &mat, const int port){
     }
 
 
-    int dataSize = 0;
     while(int portion = read( new_socket, buffer, BUFFER_SIZE)) {
-        dataSize += portion;
         if(portion < 1)
             break;
     }
-//    cv::Mat imageWithData = this->getImage(buffer, dataSize + 1, 0);
 
-   // cv::imshow("IMAGE :)", imageWithData);
-   // cv::waitKey(5000);
+    cv::Mat imageWithData = this->bytesToImage(buffer);
 
-  //  send(new_socket , hello , strlen(hello) , 0 );
-
+    cv::imshow("IMAGE :)", imageWithData);
+    cv::waitKey(5000);
 
     return 0;
 }
 
-cv::Mat TestingClass::getImage(unsigned char* image, int length, int flag)
-{
-    std::vector<unsigned char> data ;
-    for(int i = 0; i < length; i++){
-        data.push_back(image[i]);
-    }
-    cv::Mat ImMat = cv::imdecode(data, flag);
+cv::Mat TestingClass::bytesToImage(byte *bytes){
+    int height = bytes[0];
+    int width = bytes[1];
+    int channels = bytes[2];
+    cv::Mat image = cv::Mat(height, width, CV_8UC(channels), bytes + 3).clone(); // make a copy
+    return image;
+}
 
-    return ImMat;
+byte *TestingClass::imageToBytes(const cv::Mat &image){
+    unsigned int size = image.total() * image.elemSize();
+    byte *bytes = new byte[size + 3];  // you will have to delete[] that later
+    std::memcpy(bytes + 3, image.data,size * sizeof(byte));
+
+    bytes[0] = image.rows;
+    bytes[1] = image.cols;
+    bytes[2] = image.channels();
+
+
+    int height = bytes[0];
+    int width = bytes[1];
+    int channels = bytes[2];
+
+    return bytes;
 }

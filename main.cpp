@@ -11,11 +11,10 @@ int main() {
 
     const char * addr = "127.0.0.1";
 
-    std::thread t1(&TestingClass::socketTestingServer, &testingClass, img, 12321);
+   // std::thread t1(&TestingClass::socketTestingServer, &testingClass, img, 12321);
 
     while (testingClass.socketTestingClient(img, 12321, addr) != 0);
 
-    t1.join();
-
+    //t1.join();
     return 0;
 }
