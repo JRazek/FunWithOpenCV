@@ -83,11 +83,11 @@ int TestingClass::socketTestingClient(const cv::Mat &img, const int port, const 
     }
     byte * bytes = ByteImage::encodeImage(img);
 
-    send(sock, bytes, , 0);
+    send(sock, bytes, ByteImage::getDataSize(bytes), 0);
 
     close(sock);
 
-
+    delete [] bytes;
     return 0;
 }
 
@@ -129,20 +129,24 @@ int TestingClass::socketTestingServer(const cv::Mat &mat, const int port){
     }
 
 
-    std::vector<byte> bytesVector(BUFFER_SIZE);
+    std::vector<byte> bytesVector;
 
-    while(read( new_socket, buffer, BUFFER_SIZE) > 0) {
+    while(int size = read( new_socket, buffer, BUFFER_SIZE) > 0) {
         for(unsigned char & i : buffer) {
             bytesVector.push_back(i);
         }
     }
 
-    byte * bytes = &bytesVector[0];
+    byte * bytes = new byte [bytesVector.size()];
+    for(int i = 0; i < bytesVector.size(); i ++){
+        bytes[i] = bytesVector[i];
+    }
 
     cv::Mat img = ByteImage::decodeImage(bytes);
     cv::imshow("img", img);
     cv::waitKey(5000);
 
+    delete [] bytes;
     return 0;
 }
 

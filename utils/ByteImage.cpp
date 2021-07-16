@@ -35,6 +35,10 @@ byte *ByteImage::encodeImage(const cv::Mat &img) {
     return bytes;
 }
 
-unsigned short ByteImage::getDataSize(byte *bytes){
+unsigned short ByteImage::getDataSize(const byte *bytes){
+    unsigned short h = (bytes[0] << 8u) + bytes[1];
+    unsigned short w = (bytes[2] << 8u) + bytes[3];
+    unsigned short c = (bytes[4] << 8u) + bytes[5];
 
+    return h * w * c + 6;
 }

@@ -14,7 +14,7 @@ class ByteImage {
 public:
     static cv::Mat decodeImage(byte *image);
     static byte *encodeImage(const cv::Mat &img);
-    static unsigned short getDataSize(byte *bytes);
+    static unsigned short getDataSize(const byte *bytes);
 };
 
 
