@@ -15,8 +15,7 @@ public:
     static void imageDilation();
     static void longFunction();
     static void convolutionWithMyKernel(cv::Mat &);
-    static cv::Mat bytesToImage(byte *image);
-    static byte * imageToBytes(const cv::Mat &img);
+
     int socketTestingClient(const cv::Mat &mat, int port, const char *addr);
     int socketTestingServer(const cv::Mat &mat, int port);
 };

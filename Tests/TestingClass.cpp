@@ -2,6 +2,7 @@
 // Created by user on 13.07.2021.
 //
 #include "TestingClass.h"
+#include "../utils/ByteImage.h"
 #include <opencv2/opencv.hpp>
 #include <sys/socket.h>
 #include <stdio.h>
@@ -75,25 +76,18 @@ int TestingClass::socketTestingClient(const cv::Mat &img, const int port, const 
         return -1;
     }
 
-    byte *bytes = TestingClass::imageToBytes(img);
-    cv::Mat imageWithData = TestingClass::bytesToImage(bytes);
-
-
-    cv::imshow("IMAGE :)", imageWithData);
-    cv::waitKey(5000);
-
-
 
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0){
         printf("\nConnection Failed \n");
         return -1;
     }
-    
-//    send(sock, bytes, bytes.second, 0);
+    byte * bytes = ByteImage::encodeImage(img);
+
+    send(sock, bytes, , 0);
+
     close(sock);
 
 
-    delete[] bytes;
     return 0;
 }
 
@@ -120,7 +114,6 @@ int TestingClass::socketTestingServer(const cv::Mat &mat, const int port){
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons( port );
 
-    // Forcefully attaching socket to the port 8080
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0){
         perror("bind failed");
         return -1;
@@ -136,40 +129,20 @@ int TestingClass::socketTestingServer(const cv::Mat &mat, const int port){
     }
 
 
-    while(int portion = read( new_socket, buffer, BUFFER_SIZE)) {
-        if(portion < 1)
-            break;
+    std::vector<byte> bytesVector(BUFFER_SIZE);
+
+    while(read( new_socket, buffer, BUFFER_SIZE) > 0) {
+        for(unsigned char & i : buffer) {
+            bytesVector.push_back(i);
+        }
     }
 
-    cv::Mat imageWithData = this->bytesToImage(buffer);
+    byte * bytes = &bytesVector[0];
 
-    cv::imshow("IMAGE :)", imageWithData);
+    cv::Mat img = ByteImage::decodeImage(bytes);
+    cv::imshow("img", img);
     cv::waitKey(5000);
 
     return 0;
 }
 
-cv::Mat TestingClass::bytesToImage(byte *bytes){
-    int height = bytes[0];
-    int width = bytes[1];
-    int channels = bytes[2];
-    cv::Mat image = cv::Mat(height, width, CV_8UC(channels), bytes + 3).clone(); // make a copy
-    return image;
-}
-
-byte *TestingClass::imageToBytes(const cv::Mat &image){
-    unsigned int size = image.total() * image.elemSize();
-    byte *bytes = new byte[size + 3];  // you will have to delete[] that later
-    std::memcpy(bytes + 3, image.data,size * sizeof(byte));
-
-    bytes[0] = image.rows;
-    bytes[1] = image.cols;
-    bytes[2] = image.channels();
-
-
-    int height = bytes[0];
-    int width = bytes[1];
-    int channels = bytes[2];
-
-    return bytes;
-}

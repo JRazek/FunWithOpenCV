@@ -2,6 +2,7 @@
 #include <thread>
 #include <opencv2/opencv.hpp>
 #include "Tests/TestingClass.h"
+#include "utils/ByteImage.h"
 
 int main() {
     
@@ -10,11 +11,13 @@ int main() {
     TestingClass testingClass;
 
     const char * addr = "127.0.0.1";
-
-   // std::thread t1(&TestingClass::socketTestingServer, &testingClass, img, 12321);
-
+    std::thread t1(&TestingClass::socketTestingServer, &testingClass, img, 12321);
+//    byte *bytes = ByteImage::encodeImage(img);
+//    img = ByteImage::decodeImage(bytes);
+//    cv::imshow("img", img);
+//    cv::waitKey(5000);
     while (testingClass.socketTestingClient(img, 12321, addr) != 0);
 
-    //t1.join();
+    t1.join();
     return 0;
 }
