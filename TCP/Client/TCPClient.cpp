@@ -4,8 +4,10 @@
 
 #include <arpa/inet.h>
 #include <cstdio>
+#include <sys/socket.h>
 #include <stdexcept>
 #include "TCPClient.h"
+#include "../Server/transferUtils/TransferObjectData.h"
 
 TCPClient::TCPClient(const char *addr, u_short port) {
 
@@ -29,9 +31,11 @@ u_short TCPClient::connect() {
 
 u_short TCPClient::sendData(const std::vector<byte> &data) {
 
-    byte *dataFormatted = TransferObjectData::encode(bytes, dataSize);
+    byte *dataFormatted = TransferObjectData::encode(data.data(), data.size());
     u_int64_t formattedDataSize = TransferObjectData::decodeDataLength(dataFormatted);
 
     send(sock, dataFormatted, formattedDataSize, 0);
+
+    delete [] dataFormatted;
     return 0;
 }

@@ -3,7 +3,7 @@
 //
 #include "TCPController.h"
 #include "../utils/ByteImage.h"
-#include "../Server/transferUtils/TransferObjectData.h"
+#include "../TCP/Server/transferUtils/TransferObjectData.h"
 #include <opencv2/opencv.hpp>
 #include <sys/socket.h>
 #include <arpa/inet.h>
