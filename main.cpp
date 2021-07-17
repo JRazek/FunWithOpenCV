@@ -32,7 +32,12 @@ int main() {
         return -1;
     }
 
-    std::vector<byte> data = {'d','e','b','i','l','9'};
+    byte *encodedImg = ByteImage::encodeImage(img);
+
+    u_int64_t dataSize = ByteImage::getDataSize(encodedImg) + ByteImage::imageMetadataSize;
+
+    std::vector<byte> data;
+    data.insert(data.end(), encodedImg, encodedImg + dataSize);
 
     if(client.sendData(data) > 0){
         std::cout<<"ERROR";
@@ -47,5 +52,6 @@ int main() {
         std::cout<<res.second[i]<<" ";
     }
 
+    delete [] encodedImg;
     return 0;
 }

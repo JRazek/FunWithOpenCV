@@ -14,6 +14,7 @@ class ByteImage {
 private:
 
 public:
+    const static inline u_int8_t imageMetadataSize = 6;
     static cv::Mat decodeImage(byte *image);
     static byte *encodeImage(const cv::Mat &img);
     static unsigned int getDataSize(const byte *bytes);
