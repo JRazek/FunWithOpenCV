@@ -5,10 +5,8 @@
 #include "../utils/ByteImage.h"
 #include <opencv2/opencv.hpp>
 #include <sys/socket.h>
-#include <stdio.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <string.h>
 #include <opencv2/core/mat.hpp>
 #include <thread>
 
@@ -92,7 +90,7 @@ int TCPController::socketTestingClient(const cv::Mat &img, const int port, const
 
 int TCPController::socketTestingServer(const int port){
     this->socketReady = false;
-    int server_fd, new_socket, valread;
+    int server_fd, new_socket;
     struct sockaddr_in address{};
     int opt = 1;
     int addrlen = sizeof(address);
