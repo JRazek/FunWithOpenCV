@@ -18,6 +18,7 @@ public:
     TCPClient(const char *addr, u_short port);
     u_short connect();
     u_short sendData(const std::vector<byte> &data);
+    void connClose();
 };
 
 

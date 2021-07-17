@@ -42,9 +42,11 @@ int main() {
 
     std::future<std::pair<u_short , std::vector<byte>>> fut = std::async(&TCPServer::readPacket, &server);
     std::pair<u_short , std::vector<byte>> res = fut.get();
+
     for(int i = 0 ; i < res.second.size(); i ++){
         std::cout<<res.second[i]<<" ";
     }
+    client.connClose();
 
     return 0;
 }

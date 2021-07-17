@@ -78,11 +78,10 @@ std::pair<u_short , std::vector<byte>> TCPServer::readPacket() {
         requestedData = BUFFER_SIZE < (expectedDataSize - dataReceived) ? BUFFER_SIZE : expectedDataSize - dataReceived;
         if(packet < 1)
             break;
-        bytesVector.insert(bytesVector.end(), buffer, buffer + BUFFER_SIZE);
+        bytesVector.insert(bytesVector.end(), buffer, buffer + packet);
         if(!requestedData)
             break;
     }
-
 
     return {0, bytesVector};
 }
