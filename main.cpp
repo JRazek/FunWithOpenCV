@@ -1,17 +1,17 @@
 #include <iostream>
 #include <thread>
 #include <opencv2/opencv.hpp>
-#include "Tests/TestingClass.h"
+#include "Tests/TCPController.h"
 #include "utils/ByteImage.h"
 
 int main() {
     
     cv::Mat img = cv::imread("resources/aPhoto.jpg");
 
-    TestingClass testingClass;
+    TCPController testingClass;
 
     const char * addr = "127.0.0.1";
-    std::thread t1(&TestingClass::socketTestingServer, &testingClass, img, 12321);
+    std::thread t1(&TCPController::socketTestingServer, &testingClass, 12321);
 //    byte *bytes = ByteImage::encodeImage(img);
 //    img = ByteImage::decodeImage(bytes);
 //    cv::imshow("img", img);

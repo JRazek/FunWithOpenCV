@@ -18,7 +18,7 @@ byte *ByteImage::encodeImage(const cv::Mat &img) {
     unsigned short h = img.rows;
     unsigned short w = img.cols;
     unsigned short c = img.channels();
-    unsigned const int size = h * w * c + 3 * 2; //6 bytes for encoding metadata
+    unsigned const int size = h * w * c + 6; //6 bytes for encoding metadata
     byte *bytes = new byte [size];
 
     bytes[0] = (h >> 8u);
@@ -35,7 +35,7 @@ byte *ByteImage::encodeImage(const cv::Mat &img) {
     return bytes;
 }
 
-unsigned short ByteImage::getDataSize(const byte *bytes){
+unsigned int ByteImage::getDataSize(const byte *bytes){
     unsigned short h = (bytes[0] << 8u) + bytes[1];
     unsigned short w = (bytes[2] << 8u) + bytes[3];
     unsigned short c = (bytes[4] << 8u) + bytes[5];

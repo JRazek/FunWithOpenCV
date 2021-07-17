@@ -11,10 +11,12 @@
 typedef unsigned char byte;
 
 class ByteImage {
+private:
+
 public:
     static cv::Mat decodeImage(byte *image);
     static byte *encodeImage(const cv::Mat &img);
-    static unsigned short getDataSize(const byte *bytes);
+    static unsigned int getDataSize(const byte *bytes);
 };
 
 

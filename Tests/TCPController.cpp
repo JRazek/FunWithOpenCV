@@ -1,7 +1,7 @@
 //
 // Created by user on 13.07.2021.
 //
-#include "TestingClass.h"
+#include "TCPController.h"
 #include "../utils/ByteImage.h"
 #include <opencv2/opencv.hpp>
 #include <sys/socket.h>
@@ -13,7 +13,7 @@
 #include <thread>
 
 
-void TestingClass::cameraTesting() {
+void TCPController::cameraTesting() {
     cv::Mat image = cv::Mat();
     cv::VideoCapture videoCapture = cv::VideoCapture(0);
 
@@ -28,19 +28,19 @@ void TestingClass::cameraTesting() {
     }
 }
 
-void TestingClass::imageDilation() {
+void TCPController::imageDilation() {
     cv::Mat readImage = cv::imread("resources/aPhoto.jpg", 0);
     cv::imshow("photo", readImage);
     cv::Mat dilatedImage;
     //cv::dilate(readImage, dilatedImage);
    // delete image;
 }
-void TestingClass::longFunction() {
+void TCPController::longFunction() {
     std::cout<<"Running long function...";
     std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 }
 
-void TestingClass::convolutionWithMyKernel(cv::Mat &img){
+void TCPController::convolutionWithMyKernel(cv::Mat &img){
     cv::Mat buffer;
     const short kernelDepth = 1;
     const short kernelSize = 3;
@@ -60,13 +60,11 @@ void TestingClass::convolutionWithMyKernel(cv::Mat &img){
     };
 
 }
-int TestingClass::socketTestingClient(const cv::Mat &img, const int port, const char *addr){
+int TCPController::socketTestingClient(const cv::Mat &img, const int port, const char *addr){
     this->socketReady = true;
     if(!this->socketReady)
         return -1;
     int sock = socket(AF_INET, SOCK_STREAM, 0);
-    //std::string message = "hello, idk pls work or sth";
-    //const short port = 2000;
 
     sockaddr_in serv_addr{};
     serv_addr.sin_family = AF_INET;
@@ -81,9 +79,10 @@ int TestingClass::socketTestingClient(const cv::Mat &img, const int port, const 
         printf("\nConnection Failed \n");
         return -1;
     }
-    byte * bytes = ByteImage::encodeImage(img);
+    byte *bytes = ByteImage::encodeImage(img);
+    unsigned int dataSize = ByteImage::getDataSize(bytes);
 
-    send(sock, bytes, ByteImage::getDataSize(bytes), 0);
+    send(sock, bytes, dataSize, 0);
 
     close(sock);
 
@@ -91,7 +90,7 @@ int TestingClass::socketTestingClient(const cv::Mat &img, const int port, const 
     return 0;
 }
 
-int TestingClass::socketTestingServer(const cv::Mat &mat, const int port){
+int TCPController::socketTestingServer(const int port){
     this->socketReady = false;
     int server_fd, new_socket, valread;
     struct sockaddr_in address{};
@@ -99,13 +98,13 @@ int TestingClass::socketTestingServer(const cv::Mat &mat, const int port){
     int addrlen = sizeof(address);
     const short BUFFER_SIZE = 8192;
     byte buffer[BUFFER_SIZE] = {0};
-    // Creating socket file descriptor
+
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0){
         perror("socket failed");
         return -1;
     }
 
-    // Forcefully attaching socket to the port 8080
+
     if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,&opt, sizeof(opt))){
         perror("setsockopt");
         return -1;
@@ -131,22 +130,21 @@ int TestingClass::socketTestingServer(const cv::Mat &mat, const int port){
 
     std::vector<byte> bytesVector;
 
-    while(int size = read( new_socket, buffer, BUFFER_SIZE) > 0) {
-        for(unsigned char & i : buffer) {
-            bytesVector.push_back(i);
-        }
+    while(int packet = read( new_socket, buffer, BUFFER_SIZE)) {
+        if(packet < 1)
+            break;
+        bytesVector.insert(bytesVector.end(), buffer, buffer + BUFFER_SIZE);
     }
 
-    byte * bytes = new byte [bytesVector.size()];
+    byte *test = new byte [bytesVector.size()];
     for(int i = 0; i < bytesVector.size(); i ++){
-        bytes[i] = bytesVector[i];
+        test[i] = bytesVector[i];
     }
 
-    cv::Mat img = ByteImage::decodeImage(bytes);
+    cv::Mat img = ByteImage::decodeImage(bytesVector.data());
     cv::imshow("img", img);
     cv::waitKey(5000);
 
-    delete [] bytes;
     return 0;
 }
 
