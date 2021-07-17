@@ -13,6 +13,7 @@ TCPServer::TCPServer(u_short port, u_short BUFFER_SIZE):port(port), BUFFER_SIZE(
     this->socketReady = false;
     int opt = 1;
 
+    this->address = {};
     if ((this->server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0){
         perror("socket failed");
         this->constructorError = 301;

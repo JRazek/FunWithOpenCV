@@ -15,7 +15,7 @@ struct TransferObjectData {
     static void init(u_short newMetaDataLengthSize);
 
     static std::pair<u_int64_t, byte *>decode(const byte *objectEncoded);
-    static byte *encode(u_int64_t dataSize, const byte *dataRaw);
+    static byte *encode(const byte *dataRaw, const u_int64_t dataSize);
     static u_int64_t decodeDataLength(const byte *metaData);
 };
 

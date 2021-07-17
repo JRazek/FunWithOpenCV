@@ -4,9 +4,8 @@
 
 #include "TransferObjectData.h"
 
-byte *TransferObjectData::encode(u_int64_t dataSize, const byte *dataRaw) {
+byte *TransferObjectData::encode(const byte *dataRaw, const u_int64_t dataSize) {
     byte *data = new byte [dataSize + metaDataBytesSize];
-
 
     for(int i = 0; i < metaDataBytesSize; i ++){
         data[i] = (dataSize >> metaDataBytesSize * (7 - i));
@@ -18,11 +17,10 @@ byte *TransferObjectData::encode(u_int64_t dataSize, const byte *dataRaw) {
 }
 
 std::pair<u_int64_t, byte *> TransferObjectData::decode(const byte *objectEncoded){
-    u_int64_t dataSize = 0;
-    byte *decodedData;
-    dataSize = decodeDataLength(objectEncoded);
-    decodedData = new byte [dataSize];
+    u_int64_t dataSize = decodeDataLength(objectEncoded);
+    byte *decodedData = new byte [dataSize];
     std::copy(objectEncoded + metaDataBytesSize, objectEncoded + metaDataBytesSize + dataSize, decodedData);
+    return {dataSize, decodedData};
 }
 
 void TransferObjectData::init(u_short newMetaDataLengthSize) {

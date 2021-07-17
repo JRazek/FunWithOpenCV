@@ -5,6 +5,7 @@
 #ifndef OPENCV_TCPSERVER_H
 #define OPENCV_TCPSERVER_H
 #include <vector>
+#include <netinet/in.h>
 
 typedef unsigned short u_short;
 typedef unsigned char byte;
@@ -16,8 +17,8 @@ class TCPServer {
 private:
     const u_short transferObjectMETADATASize = 8;
     u_short constructorError;
-    struct sockaddr_in address{};
-    int server_fd, new_socket{};
+    sockaddr_in address;
+    int server_fd, new_socket;
 
 
 public:
