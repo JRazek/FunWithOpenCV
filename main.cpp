@@ -27,14 +27,14 @@ int main() {
     while (client.connect() < 0){
         sleep(10);
     }
+    if(accept.get() > 0){
+        std::cout<<"ERROR";
+        return -1;
+    }
 
     std::vector<byte> data = {'d','e','b','i','l','9'};
 
     if(client.sendData(data) > 0){
-        std::cout<<"ERROR";
-        return -1;
-    }
-    if(accept.get() > 0){
         std::cout<<"ERROR";
         return -1;
     }
@@ -46,7 +46,6 @@ int main() {
     for(int i = 0 ; i < res.second.size(); i ++){
         std::cout<<res.second[i]<<" ";
     }
-    client.connClose();
 
     return 0;
 }

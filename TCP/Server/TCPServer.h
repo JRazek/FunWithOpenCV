@@ -22,13 +22,35 @@ private:
 
 
 public:
+    /**
+     * initializes data
+     * port for listening and buffer size for receiving data in readData()
+     * */
     TCPServer(u_short port, u_short BUFFER_SIZE);
+
+
+    /**
+     *
+     * @return  0 if successful, otherwise error code
+     * reserves the port specified in constructor, starts listening on that port
+     */
     u_short listen();
 
+
+    /**
+     *
+     * @return 0 if successful, otherwise error code
+     * waits for any connection request.
+     */
     u_short accept();
 
-    //errcode, vector
+
+    /**
+     *
+     * @return pair of <0 if successful otherwise error code, vector of data received from single encoded packet>
+     */
     std::pair<u_short , std::vector<byte>> readPacket();
+
 };
 
 
