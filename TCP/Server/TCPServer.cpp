@@ -62,7 +62,7 @@ std::pair<u_short , std::vector<byte>> TCPServer::readPacket() {
 
     byte packetMetaData[TransferObjectData::metaDataBytesSize];
 
-    int status = read(new_socket, packetMetaData, sizeof(packetMetaData));
+    int status = read(new_socket, &packetMetaData, sizeof(packetMetaData));
     if(status < 0)
         return {-1, {}};
 
@@ -75,10 +75,12 @@ std::pair<u_short , std::vector<byte>> TCPServer::readPacket() {
 
     while(int packet = read( new_socket, buffer, requestedData) ){
         dataReceived += packet;
-        requestedData = BUFFER_SIZE < expectedDataSize - dataReceived ? BUFFER_SIZE : expectedDataSize;
+        requestedData = BUFFER_SIZE < (expectedDataSize - dataReceived) ? BUFFER_SIZE : expectedDataSize - dataReceived;
         if(packet < 1)
             break;
         bytesVector.insert(bytesVector.end(), buffer, buffer + BUFFER_SIZE);
+        if(!requestedData)
+            break;
     }
 
 

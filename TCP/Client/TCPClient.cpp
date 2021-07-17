@@ -32,7 +32,7 @@ u_short TCPClient::connect() {
 u_short TCPClient::sendData(const std::vector<byte> &data) {
 
     byte *dataFormatted = TransferObjectData::encode(data.data(), data.size());
-    u_int64_t formattedDataSize = TransferObjectData::decodeDataLength(dataFormatted);
+    u_int64_t formattedDataSize = data.size() + TransferObjectData::metaDataBytesSize;
 
     send(sock, dataFormatted, formattedDataSize, 0);
 
