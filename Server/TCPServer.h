@@ -14,6 +14,7 @@ class TCPServer {
     bool socketReady;
     const u_short BUFFER_SIZE = 8192;
 private:
+    const u_short transferObjectMETADATASize = 8;
     u_short constructorError;
     struct sockaddr_in address{};
     int server_fd, new_socket{};
@@ -25,7 +26,9 @@ public:
     /**
      * start listening on specified port
      **/
-    std::pair<u_short, std::vector<byte>> readPacket();
+
+    //errcode, vector
+    std::pair<u_short , std::vector<byte>> readPacket();
 };
 
 

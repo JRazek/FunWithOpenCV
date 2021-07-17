@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <zconf.h>
 #include "TCPServer.h"
+#include "transferUtils/TransferObjectData.h"
 
 TCPServer::TCPServer(u_short port, u_short BUFFER_SIZE):port(port), BUFFER_SIZE(BUFFER_SIZE) {
     this->socketReady = false;
@@ -49,21 +50,31 @@ u_short TCPServer::listen() {
     return 0;
 }
 
-std::pair<u_short, std::vector<byte>> TCPServer::readPacket() {
+std::pair<u_short , std::vector<byte>> TCPServer::readPacket() {
     byte buffer[this->BUFFER_SIZE];
-    std::vector<byte> bytesVector;
-    u_int64_t dataSize;
-    bool dataNow = false;
 
-    u_short dataRequestedSize = BUFFER_SIZE;
 
-    byte packetData[8];
+    byte packetMetaData[TransferObjectData::metaDataBytesSize];
 
-    int status = read(new_socket, packetData, sizeof(packetData));
+    int status = read(new_socket, packetMetaData, sizeof(packetMetaData));
     if(status < 0)
         return {-1, {}};
 
+    u_int64_t expectedDataSize = TransferObjectData::decodeDataLength(packetMetaData);
+
+    std::vector<byte> bytesVector;
+
+    u_int64_t dataReceived = 0;
+    u_int64_t requestedData = BUFFER_SIZE < expectedDataSize - dataReceived ? BUFFER_SIZE : expectedDataSize;
+
+    while(int packet = read( new_socket, buffer, requestedData) ){
+        dataReceived += packet;
+        requestedData = BUFFER_SIZE < expectedDataSize - dataReceived ? BUFFER_SIZE : expectedDataSize;
+        if(packet < 1)
+            break;
+        bytesVector.insert(bytesVector.end(), buffer, buffer + BUFFER_SIZE);
+    }
 
 
-    return std::pair<u_short, std::vector<byte>>();
+    return {0, bytesVector};
 }

@@ -3,7 +3,6 @@
 #include <opencv2/opencv.hpp>
 #include "Tests/TCPController.h"
 #include "utils/ByteImage.h"
-#include "Server/dtos/TransferObjectData.h"
 
 int main() {
     
