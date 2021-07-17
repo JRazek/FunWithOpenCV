@@ -52,7 +52,7 @@ u_short TCPServer::listen() {
 std::pair<u_short, std::vector<byte>> TCPServer::readPacket() {
     byte buffer[this->BUFFER_SIZE];
     std::vector<byte> bytesVector;
-    u_int8_t dataSize;
+    u_int64_t dataSize;
     bool dataNow = false;
 
     u_short dataRequestedSize = BUFFER_SIZE;
