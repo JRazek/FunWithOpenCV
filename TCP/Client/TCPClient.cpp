@@ -7,7 +7,7 @@
 #include <sys/socket.h>
 #include <stdexcept>
 #include "TCPClient.h"
-#include "../Server/transferUtils/TransferObjectData.h"
+#include "../transferUtils/TransferObjectData.h"
 
 TCPClient::TCPClient(const char *addr, u_short port) {
 

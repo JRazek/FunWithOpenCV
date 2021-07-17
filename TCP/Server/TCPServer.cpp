@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <zconf.h>
 #include "TCPServer.h"
-#include "transferUtils/TransferObjectData.h"
+#include "../transferUtils/TransferObjectData.h"
 
 TCPServer::TCPServer(u_short port, u_short BUFFER_SIZE):port(port), BUFFER_SIZE(BUFFER_SIZE) {
     this->socketReady = false;

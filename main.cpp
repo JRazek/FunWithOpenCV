@@ -5,7 +5,7 @@
 #include "TCP/Server/TCPServer.h"
 #include <future>
 #include "utils/ByteImage.h"
-#include "TCP/Server/transferUtils/TransferObjectData.h"
+#include "TCP/transferUtils/TransferObjectData.h"
 #include "TCP/Client/TCPClient.h"
 
 int main() {
@@ -45,7 +45,6 @@ int main() {
     for(int i = 0 ; i < res.second.size(); i ++){
         std::cout<<res.second[i]<<" ";
     }
-   // delete [] encoded;
-    //delete [] res.second;
+
     return 0;
 }
