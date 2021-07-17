@@ -24,9 +24,6 @@ private:
 public:
     TCPServer(u_short port, u_short BUFFER_SIZE);
     u_short listen();
-    /**
-     * start listening on specified port
-     **/
 
     //errcode, vector
     std::pair<u_short , std::vector<byte>> readPacket();
