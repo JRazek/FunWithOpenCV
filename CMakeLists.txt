@@ -21,6 +21,6 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 #set(CMAKE_C_COMPILER "/usr/bin/arm-linux-gnueabihf-gcc-9")
 
 
-add_executable(OpenCV main.cpp Tests/TCPController.cpp utils/ByteImage.cpp utils/ByteImage.h Server/TCPServer.cpp Server/TCPServer.h Server/transferUtils/TransferObjectData.cpp Server/transferUtils/TransferObjectData.h)
+add_executable(OpenCV main.cpp Tests/TCPController.cpp utils/ByteImage.cpp utils/ByteImage.h Server/TCPServer.cpp Server/TCPServer.h Server/transferUtils/TransferObjectData.cpp Server/transferUtils/TransferObjectData.h Client/TCPClient.cpp Client/TCPClient.h)
 
 target_link_libraries( OpenCV ${OpenCV_LIBS} )

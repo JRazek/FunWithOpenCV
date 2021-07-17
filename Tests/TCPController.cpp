@@ -3,6 +3,7 @@
 //
 #include "TCPController.h"
 #include "../utils/ByteImage.h"
+#include "../Server/transferUtils/TransferObjectData.h"
 #include <opencv2/opencv.hpp>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -59,7 +60,6 @@ void TCPController::convolutionWithMyKernel(cv::Mat &img){
 
 }
 int TCPController::socketTestingClient(const cv::Mat &img, const int port, const char *addr){
-    this->socketReady = true;
     if(!this->socketReady)
         return -1;
     int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -80,10 +80,13 @@ int TCPController::socketTestingClient(const cv::Mat &img, const int port, const
     byte *bytes = ByteImage::encodeImage(img);
     unsigned int dataSize = ByteImage::getDataSize(bytes);
 
-    send(sock, bytes, dataSize, 0);
+    byte *dataFormatted = TransferObjectData::encode(bytes, dataSize);
+    u_int64_t formattedDataSize = TransferObjectData::decodeDataLength(dataFormatted);
+
+    send(sock, dataFormatted, formattedDataSize, 0);
 
     close(sock);
-
+    delete [] dataFormatted;
     delete [] bytes;
     return 0;
 }
@@ -101,7 +104,6 @@ int TCPController::socketTestingServer(const int port){
         perror("socket failed");
         return -1;
     }
-
 
     if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,&opt, sizeof(opt))){
         perror("setsockopt");

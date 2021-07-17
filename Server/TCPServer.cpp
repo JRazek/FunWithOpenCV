@@ -38,18 +38,23 @@ TCPServer::TCPServer(u_short port, u_short BUFFER_SIZE):port(port), BUFFER_SIZE(
 }
 
 u_short TCPServer::listen() {
-    int addrLen = sizeof(address);
     if (::listen(server_fd, 3) < 0){
         perror("listen");
         return -1;
     }
-    this->socketReady = true;
-    if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrLen))<0){
+    return 0;
+}
+u_short TCPServer::accept() {
+    int addrLen = sizeof(address);
+    if ((new_socket = ::accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrLen))<0){
         perror("accept");
         return -1;
     }
+    this->socketReady = true;
     return 0;
 }
+
+
 
 std::pair<u_short , std::vector<byte>> TCPServer::readPacket() {
     byte buffer[this->BUFFER_SIZE];
