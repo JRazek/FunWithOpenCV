@@ -8,6 +8,8 @@
 #include "TCP/transferUtils/TransferObjectData.h"
 #include "TCP/Client/TCPClient.h"
 
+//todo change u_short to u_int8_t
+
 int main() {
 
     cv::Mat img = cv::imread("resources/aPhoto.jpg");
