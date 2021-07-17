@@ -11,10 +11,10 @@ typedef unsigned short u_short;
 typedef unsigned char byte;
 
 class TCPServer {
+private:
     const u_short port;
     bool socketReady;
     const u_short BUFFER_SIZE = 8192;
-private:
     const u_short transferObjectMETADATASize = 8;
     u_short constructorError;
     sockaddr_in address;
