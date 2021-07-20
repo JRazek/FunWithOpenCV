@@ -1,20 +1,15 @@
 #include <iostream>
-#include <thread>
 #include <opencv2/opencv.hpp>
-#include "Tests/TCPController.h"
-#include "TCP/Server/TCPServer.h"
+#include "Server/TCPServer.h"
 #include <future>
 #include "utils/ByteImage.h"
-#include "TCP/transferUtils/TransferObjectData.h"
-#include "TCP/Client/TCPClient.h"
-
-//todo change u_short to u_int8_t
+#include "transferUtils/TransferObjectData.h"
+#include "Client/TCPClient.h"
 
 int main() {
 
     cv::Mat img = cv::imread("resources/aPhoto.jpg");
 
-    TCPController testingClass;
 
     const char * addr = "127.0.0.1";
     const u_short port = 12321;
@@ -41,19 +36,25 @@ int main() {
     std::vector<byte> data;
     data.insert(data.end(), encodedImg, encodedImg + dataSize);
 
-    if(client.sendData(data) > 0){
-        std::cout<<"ERROR";
-        return -1;
+    //todo some condition
+    for(int i = 0; i < 10; i ++) {
+        std::future<std::pair<u_short, std::vector<byte>>> fut = std::async(&TCPServer::readPacket, &server);
+
+        if (client.sendData(data) > 0) {
+            std::cout << "ERROR";
+            return -1;
+        }
+
+        std::pair<u_short, std::vector<byte>> res = fut.get();
+
+
+        cv::Mat decodedImg = ByteImage::decodeImage(res.second.data());
+
+        cv::imshow("img", decodedImg);
+
+        cv::waitKey(10);
     }
-
-
-    std::future<std::pair<u_short , std::vector<byte>>> fut = std::async(&TCPServer::readPacket, &server);
-    std::pair<u_short , std::vector<byte>> res = fut.get();
-
-    for(int i = 0 ; i < res.second.size(); i ++){
-        std::cout<<res.second[i]<<" ";
-    }
-
+    client.connClose();
     delete [] encodedImg;
     return 0;
 }
