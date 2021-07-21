@@ -20,7 +20,7 @@ int main() {
 
     server.listen();
 
-    std::future<u_short> accept = std::async(&TCPServer::accept, &server);
+    std::future<int> accept = std::async(&TCPServer::accept, &server);
     while (client.connect() < 0){
         sleep(10);
     }
@@ -36,24 +36,28 @@ int main() {
     std::vector<byte> data;
     data.insert(data.end(), encodedImg, encodedImg + dataSize);
 
-    //todo some condition
-    for(int i = 0; i < 10; i ++) {
-        std::future<std::pair<u_short, std::vector<byte>>> fut = std::async(&TCPServer::readPacket, &server);
-
-        if (client.sendData(data) > 0) {
-            std::cout << "ERROR";
-            return -1;
-        }
-
-        std::pair<u_short, std::vector<byte>> res = fut.get();
+    const u_short PACKETS_COUNT = 10;
 
 
-        cv::Mat decodedImg = ByteImage::decodeImage(res.second.data());
+    client.sendPacketsMetaData(PACKETS_COUNT);
 
-        cv::imshow("img", decodedImg);
+    int statusMetadata = server.readPacketsMetadata();
 
-        cv::waitKey(10);
+    std::future<decltype(server.readPacket())> fut = std::async(&TCPServer::readPacket, &server);
+
+
+    for(int i = 0; i < PACKETS_COUNT; i ++) {
+        client.sendPacket(data);
     }
+
+    auto res = fut.get();
+
+    cv::Mat decodedImg = ByteImage::decodeImage(res.second.data());
+
+    cv::imshow("img", decodedImg);
+
+    cv::waitKey(10);
+
     client.connClose();
     delete [] encodedImg;
     return 0;
