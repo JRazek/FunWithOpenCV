@@ -13,3 +13,18 @@ void Server::notifyNewPacket(int socketID, std::vector<byte> &data) {
     this->bufferedImages.push_back(img);
     //todo some buffer to store images and once a second show them all in some specific order
 }
+
+Server::~Server() {
+    for(auto i : bufferedImages) {
+        delete i;
+    }
+}
+
+void Server::showBufferedImagesAndClearBuffer() {
+    for(auto b : bufferedImages){
+        cv::imshow("image", *b);
+        cv::waitKey(1);
+        delete b;
+    }
+    this->bufferedImages.clear();
+}

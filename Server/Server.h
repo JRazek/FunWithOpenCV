@@ -11,11 +11,10 @@
 class Server : public TCPServer{
     std::vector<cv::Mat *> bufferedImages;
     virtual void notifyNewPacket(int socketID, std::vector<byte> &data);
-    ~Server(){
-        for(auto i : bufferedImages){
-            delete i;
-        }
-    }
+
+    //should be run every second to show all the images. Also calculate the right delay and sizes to operate.
+    void showBufferedImagesAndClearBuffer();
+    ~Server();
 };
 
 
