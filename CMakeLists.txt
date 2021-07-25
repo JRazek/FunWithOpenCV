@@ -16,12 +16,14 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 include_directories($ENV{HOME}/CLionProjects/TCProtocols)
 
 #flag - if true - compile server otherwise compile client
-if(false)
-    add_executable(OpenCVTransfers serverRun.cpp utils/ByteImage.cpp utils/ByteImage.h Server/Server.cpp Server/Server.h )
-else()
-    add_executable(OpenCVTransfers clientRun.cpp utils/ByteImage.cpp utils/ByteImage.h )
-endif()
 
-target_link_libraries(OpenCVTransfers ${OpenCV_LIBS})
+add_executable(OpenCVTransfersServer serverRun.cpp utils/ByteImage.cpp utils/ByteImage.h Server/Server.cpp Server/Server.h )
+add_executable(OpenCVTransfersClient clientRun.cpp utils/ByteImage.cpp utils/ByteImage.h )
 
-target_link_libraries(OpenCVTransfers $ENV{HOME}/CLionProjects/TCProtocols/build/libTCProtocols.a)
+target_link_libraries(OpenCVTransfersServer ${OpenCV_LIBS})
+
+target_link_libraries(OpenCVTransfersServer $ENV{HOME}/CLionProjects/TCProtocols/build/libTCProtocols.a)
+
+target_link_libraries(OpenCVTransfersClient ${OpenCV_LIBS})
+
+target_link_libraries(OpenCVTransfersClient $ENV{HOME}/CLionProjects/TCProtocols/build/libTCProtocols.a)

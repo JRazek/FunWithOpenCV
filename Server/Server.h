@@ -7,7 +7,7 @@
 
 #include "Server/TCPServer.h"
 
-class Server : TCPServer{
+class Server : public TCPServer{
     virtual void notifyNewPacket(int socketID, std::vector<byte> &data);
 };
 

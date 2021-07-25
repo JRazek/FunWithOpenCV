@@ -1,10 +1,10 @@
 #include <opencv2/opencv.hpp>
-#include "Server/TCPServer.h"
+#include "Server/Server.h"
 #include <thread>
 
 int main() {
-    TCPServer server;
-    server.addListener(12321, 16384);
+    Server server;
+    server.addListener(12321,10000);
     std::thread * serverThread = server.run();
 
     serverThread->join();
