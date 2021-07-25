@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(OpenCV)
+project(OpenCVTransfers)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -15,8 +15,13 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 include_directories($ENV{HOME}/CLionProjects/TCProtocols)
 
-add_executable(OpenCV main.cpp utils/ByteImage.cpp utils/ByteImage.h Server/Server.cpp Server/Server.h)
+#flag - if true - compile server otherwise compile client
+if(false)
+    add_executable(OpenCVTransfers serverRun.cpp utils/ByteImage.cpp utils/ByteImage.h Server/Server.cpp Server/Server.h )
+else()
+    add_executable(OpenCVTransfers clientRun.cpp utils/ByteImage.cpp utils/ByteImage.h )
+endif()
 
-target_link_libraries( OpenCV ${OpenCV_LIBS} )
+target_link_libraries(OpenCVTransfers ${OpenCV_LIBS})
 
-target_link_libraries(OpenCV $ENV{HOME}/CLionProjects/TCProtocols/build/libTCProtocols.a)
+target_link_libraries(OpenCVTransfers $ENV{HOME}/CLionProjects/TCProtocols/build/libTCProtocols.a)
