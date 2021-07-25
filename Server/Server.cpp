@@ -9,6 +9,7 @@
 void Server::notifyNewPacket(int socketID, std::vector<byte> &data) {
     //TCPServer::notifyNewPacket(socketID, data);
     Logger::log("new packet", LEVEL::DEBUG);
-    cv::Mat img = ByteImage::decodeImage(data.data());
+    cv::Mat * img = new cv::Mat(ByteImage::decodeImage(data.data()));
+    this->bufferedImages.push_back(img);
     //todo some buffer to store images and once a second show them all in some specific order
 }
