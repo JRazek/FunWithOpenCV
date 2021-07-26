@@ -17,15 +17,18 @@ int main() {
     cv::VideoCapture cam(0);
     cv::Mat video;
 
-    const int packetCount = 1000;
+    while(1) {
+        const int packetCount = 1000;
 
-    tcpClient.sendPacketsMetaData(packetCount);
-    for(int i = 0; i < packetCount; i ++){
-        cam.read(video);
-        byte * data = ByteImage::encodeImage(video);
-        tcpClient.sendPacket(data, ByteImage::getDataSize(data) + ByteImage::imageMetadataSize);
-        cv::waitKey(16);
-        delete data;
+        tcpClient.sendPacketsMetaData(packetCount);
+        for (int i = 0; i < packetCount; i++) {
+            cam.read(video);
+            byte *data = ByteImage::encodeImage(video);
+            if(tcpClient.sendPacket(data, ByteImage::getDataSize(data) + ByteImage::imageMetadataSize) < 0)
+                return -1;
+            cv::waitKey(16);
+            delete data;
+        }
     }
     return 0;
 }
