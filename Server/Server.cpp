@@ -29,6 +29,4 @@ void Server::showBufferedImagesAndClearBuffer() {
     this->bufferedImages.clear();
 }
 
-Server::Server() {
-
-}
+Server::Server() = default;
