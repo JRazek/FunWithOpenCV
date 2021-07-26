@@ -28,3 +28,7 @@ void Server::showBufferedImagesAndClearBuffer() {
     }
     this->bufferedImages.clear();
 }
+
+Server::Server() {
+
+}

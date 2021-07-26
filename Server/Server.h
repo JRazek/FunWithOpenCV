@@ -14,6 +14,9 @@ class Server : public TCPServer{
 
     //should be run every second to show all the images. Also calculate the right delay and sizes to operate.
     void showBufferedImagesAndClearBuffer();
+
+public:
+    Server();
     ~Server();
 };
 
