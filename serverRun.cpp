@@ -6,7 +6,7 @@ int main() {
     Server server;
     server.addListener(12321,10000);
     std::thread * serverThread = server.run();
-    server.startShowingBufferedImages(16);
+    //server.startShowingBufferedImages(0, 16);
     serverThread->join();
     return 0;
 }
