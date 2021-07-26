@@ -9,24 +9,32 @@
 void Server::notifyNewPacket(int socketID, std::vector<byte> &data) {
     //TCPServer::notifyNewPacket(socketID, data);
     Logger::log("new packet", LEVEL::DEBUG);
-    cv::Mat * img = new cv::Mat(ByteImage::decodeImage(data.data()));
-    this->bufferedImages.push_back(img);
+    auto * img = new cv::Mat(ByteImage::decodeImage(data.data()));
+    this->bufferedImages.emplace(img);
     //todo some buffer to store images and once a second show them all in some specific order
 }
 
 Server::~Server() {
-    for(auto i : bufferedImages) {
-        delete i;
+    while(!bufferedImages.empty()){
+        cv::Mat * bufferedImage = bufferedImages.front();
+        bufferedImages.pop();
+        delete bufferedImage;
     }
 }
 
-void Server::showBufferedImagesAndClearBuffer() {
-    for(auto b : bufferedImages){
-        cv::imshow("image", *b);
-        cv::waitKey(1);
-        delete b;
-    }
-    this->bufferedImages.clear();
+void Server::startShowingBufferedImages(int delay) {
+    std::thread videoThread([this, delay]{
+        while(true){
+            if(!bufferedImages.empty()) {
+                cv::Mat *video = bufferedImages.front();
+                bufferedImages.pop();
+                cv::imshow("web cam", *video);
+                cv::waitKey(delay);
+                delete video;
+            }
+        }
+    });
+    videoThread.detach();
 }
 
 Server::Server() = default;

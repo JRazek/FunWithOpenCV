@@ -6,16 +6,15 @@
 #define OPENCV_SERVER_H
 
 #include <opencv2/core/mat.hpp>
+#include <queue>
 #include "Server/TCPServer.h"
 
 class Server : public TCPServer{
-    std::vector<cv::Mat *> bufferedImages;
+    std::queue<cv::Mat *> bufferedImages;
     virtual void notifyNewPacket(int socketID, std::vector<byte> &data);
 
-    //should be run every second to show all the images. Also calculate the right delay and sizes to operate.
-    void showBufferedImagesAndClearBuffer();
-
 public:
+    void startShowingBufferedImages(int delay);
     Server();
     ~Server();
 };

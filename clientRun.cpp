@@ -16,13 +16,15 @@ int main() {
         return -1;
     cv::VideoCapture cam(0);
     cv::Mat video;
-    cam.read(video);
 
-    byte * data = ByteImage::encodeImage(video);
+    const int packetCount = 1000;
 
-    tcpClient.sendPacketsMetaData(100);
-    for(int i = 0; i < 100; i ++){
+    tcpClient.sendPacketsMetaData(packetCount);
+    for(int i = 0; i < packetCount; i ++){
+        cam.read(video);
+        byte * data = ByteImage::encodeImage(video);
         tcpClient.sendPacket(data, ByteImage::getDataSize(data) + ByteImage::imageMetadataSize);
+        cv::waitKey(16);
     }
     return 0;
 }
