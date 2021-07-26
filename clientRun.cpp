@@ -25,6 +25,7 @@ int main() {
         byte * data = ByteImage::encodeImage(video);
         tcpClient.sendPacket(data, ByteImage::getDataSize(data) + ByteImage::imageMetadataSize);
         cv::waitKey(16);
+        delete data;
     }
     return 0;
 }
