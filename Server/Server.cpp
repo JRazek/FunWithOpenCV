@@ -48,6 +48,7 @@ void Server::startShowingBufferedImages(int socketID, int delay) {
 void Server::notifySocketDone(int socketID) {
     TCPServer::notifySocketDone(socketID);
     cv::destroyWindow("webCam" + std::to_string(socketID));
+    cv::waitKey(1);
 }
 
 Server::Server() = default;
